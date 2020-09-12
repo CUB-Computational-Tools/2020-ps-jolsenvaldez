@@ -19,6 +19,7 @@ editor_options:
 ---
 
 ```{r}
+install.packages(c("devtools", "pryr", "tidyverse", "rmarkdown", "readxl", "latex2exp", "viridis", "reticulate", "IRkernel"))
 library(tidyverse)
 library(devtools)
 library(pryr)
