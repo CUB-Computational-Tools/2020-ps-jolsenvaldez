@@ -18,19 +18,6 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r}
-install.packages(c("devtools", "pryr", "tidyverse", "rmarkdown", "readxl", "latex2exp", "viridis", "reticulate", "IRkernel"))
-library(tidyverse)
-library(devtools)
-library(pryr)
-library(rmarkdown)
-library(readxl) 
-library(latex2exp) 
-library(viridis) 
-library(reticulate)
-library(IRkernel)
-```
-
 > Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
 
 ##Questions and Answers
@@ -50,6 +37,7 @@ Q2 Solution:
 
 Here is the equation that I'll use to solve for the Power of the sun: 
 $$P = e \sigma T^4*A$$
+
 I'm following the steps from the example to write code to solve for the Power of the sun:
 ```{r Create a variable and list of constants and values, perform a calculation using those values, and solve for the term P in Watts}
 calc_P_list <- list(T=5770, C=5.67E-8, E=1, R1=6.96E8, R2=1.496E11)
@@ -84,12 +72,16 @@ Q4 Solution:
 
 First, I'll rearrange the original equation to solve for temperature: 
 $$So*\pi R^2 = e\sigma T^4*4\pi R^2$$
+
 Step 1, move $T^4$ to the left side and all other terms to the right side. I'm also going to remove the term for emissivity (e), since it's just going to be 1:  
 $$T^4 = (So*\pi R^2)/(\sigma T^4*4\pi R^2)$$
+
 Step 2, directly compare the area terms to see what can be canceled and/or simplified (in this case the $\pi R^2$ will cancel): 
 $$T^4 = (So/\sigma)*(\pi R^2/4\pi R^2)$$
+
 Step 3, take the fourth root on both sides so that $T^4$ becomes T on the left side: 
 $$T = [So/4\sigma]^{1/4}$$
+
 Now I can write code to create a variable and list of values to solve for T. 
 ```{r Create a variable and list of constants and values, perform a calculation using those values, and solve for the term T in Kelvin}
 calc_T_list <- list(So = 1360, C=5.67E-8)
