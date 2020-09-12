@@ -1,5 +1,6 @@
 ---
 title: "Week 1 Problem Set Answers"
+subtitle: "The Stefan-Boltzmann Law"
 author: "Juliana Olsen-Valdez"
 date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
 output:
@@ -13,7 +14,7 @@ output:
     toc_float: yes
     toc_depth: 3
     code_folding: show
-subtitle: The Stefan-Boltzmann Law
+
 editor_options:
   chunk_output_type: inline
 ---
