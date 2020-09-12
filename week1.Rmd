@@ -1,7 +1,7 @@
 ---
-title: "TITLE"
-subtitle: "SUBTITLE"
-author: "AUTHOR"
+title: "Week 1 Problem Set"
+subtitle: "The Stefan-Boltzmann Law"
+author: "Juliana Olsen-Valdez"
 date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
 output:
   html_document: 
@@ -16,3 +16,63 @@ editor_options:
 ---
 
 > Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+Introduction
+```{r Introduction}
+#Between 1879 and 1884, two Austrian physicists simultaneously derived a thermodynamics law that related the power per unit area to an absolute temperature for perfect black bodies (those that absorb all radiant energy). The Stefan-Boltzmann law, named after both scientists, is a powerful equation that allows for the calculation of the radiation emitted and/or received by planets of different sizes, as well as the black body temperature of those planets. 
+```
+
+Learning Goals
+```{r Learning Goals}
+#By the end of this exercise, you will be able to:
+#1) Define the quantitative terms in the Stefan-Boltzmann law, along with providing their units. 
+#2) Understand how the Stefan-Boltzmann law can be applied to thermodynamic calculations using astronomical geometry. 
+#3) Solve for the Power (in Watts) of the sun. 
+#4) Solve for the black body Temperature (in degrees Celsius) of the earth. 
+```
+
+Background and Defining Terms
+```{r Background and Defining Terms}
+#Below is the Stefan-Boltzmann law, with labeled variables and units:
+!(2020-ps-jolsenvaldez/Stefan-Boltzmann_image.png) 
+#source: https://www.deviantart.com/zackdowney/art/Stefan-Boltzmann-Law-407403124
+
+#Note that the three main units are Watts (for power), square meters (for surface area), and Kelvins (for temperature). 
+
+#The Stefan-Boltzmann law can also be written like this: 
+!(2020-ps-jolsenvaldez/Stefan-Boltzmann_image2.png)
+#source: http://hyperphysics.phy-astr.gsu.edu/hbase/thermo/stefan.html
+
+#In this form, the Stefan-Boltzmann equation compares an energy (power per unit area squared, with units W/m^2) to Temperature raised to the fourth (with units in Kelvin^4). The Stefan-Boltzmann constant creates a proportionality between these variables (notice that the units of the constant make it so that the units on either side of the equals sign simplify to W/m^2). 
+
+#One more thing! When we talk about Area (in m^2), we're mostly talking about the surface area of a planet or black body. This is because energy comes out from all sides of a planet's surface. Therefore, Area (A) is usually represented by 4piR^2 where R is the radius of a planet. What we take to be the area (or the radius) might change depending on what area we define as emitting or receiving energy.
+
+#Now let's get into what this equation is really saying and why it is powerful: 
+#-If we know the temperature and the surface area (which we can get from the radius) of a planet, we can find the wattage of that planet. 
+#-We can also solve for the black body temperature of a planet if we know the amount of energy it receives. 
+#-In Geology, solving thermodynamics problems like these was the first step in understanding the age of the earth, processes of heat moving in the earth, and many other cornerstone questions.  
+```
+
+```{r }
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
