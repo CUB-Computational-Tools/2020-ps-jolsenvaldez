@@ -18,6 +18,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
+<<<<<<< Updated upstream
 ```{r}
 library(tidyverse)
 library(devtools)
@@ -30,6 +31,8 @@ library(reticulate)
 library(IRkernel)
 ```
 
+=======
+>>>>>>> Stashed changes
 > Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
 
 ##Introduction
@@ -89,10 +92,21 @@ Below is code that displays the value for Power, P in Watts. Note that one can m
 cat (P, "W")
 ```
 
+<<<<<<< Updated upstream
 Now we'll take the Power of the sun and divide it by the surface area of a radius that equals the distance between the earth and the sun. Why? Because if we want to know the amount of energy (in $W/m^2$) that the earth receives from the sun and we know the power that the sun gives off, then we need to divide that power (in Watts) by an area whose radius reflects the distance that that energy travels from the sun to the earth. That is the value of $1.496x10^{11}$ meters. 
 $$So = P~sun / 4\pi R^2 $$ 
 Here's the same equation ready to be solved:
 $$So = P~sun / 4\pi (1.496x10^{11})^2) $$ 
+=======
+Now we'll take the Power of the sun and divide it by the surface area of a radius that equals the distance between the earth and the sun. Why? Because if we want to know the amount of energy (in $W/m^2$) that the earth receives from the sun and we know the power that the sun gives off, then we need to divide that power (in Watts) by an area whose radius reflects the distance that that energy travels from the sun to the earth. 
+
+That is the value of $1.496x10^{11}$ meters. 
+$$So = P~sun / 4\pi R^2 $$ 
+
+Here's the same equation ready to be solved:
+$$So = P~sun / 4\pi (1.496x10^{11})^2) $$ 
+
+>>>>>>> Stashed changes
 In our code, we can take the value that we got for P and divide it by the terms that we need to represent the surface area to solve for So. 
 ```{r Calculate So using the values and constants in a mathematical equation}
 So <- (P/(4*pi*(calc_So_list$R2^2)))
