@@ -1,0 +1,109 @@
+---
+title: "Week 1 Problem Set Answers"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+subtitle: The Stefan-Boltzmann Law
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+install.packages(c("devtools", "pryr", "tidyverse", "rmarkdown", "readxl", "latex2exp", "viridis", "reticulate", "IRkernel"))
+library(tidyverse)
+library(devtools)
+library(pryr)
+library(rmarkdown)
+library(readxl) 
+library(latex2exp) 
+library(viridis) 
+library(reticulate)
+library(IRkernel)
+```
+
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+##Questions and Answers
+1) What are the units of the Stefan-Boltzmann constant? Write out the units in the Stefan-Boltzmann law to show how the units of this constant cancel certain units to leave both sides of the equation with the same units. 
+
+Q1 Solution:
+
+$$(W/m^2) = (W/m^2/K^4) \ *(K^4)$$
+
+The units of the Stefan-Boltzmann constant are Watts per meters squared per kelvins to the fourth power or $W/m^2/K^4$. This makes sense because the Stefan-Boltzmann constant is on the right side of the equation with T^4. This allows for the $K^4$ in the temperature term to cancel with the $K^4$ in the denominator of the S-B constant. They you're left with the units $W/m^2$ on the right side which is the same as the units for P/A (where Power is in Watts and Area is in $m^2$) on the left side.
+
+____________________________________________________
+
+2) Solve for the Power (in Watts) of the sun using the Sun's temperature of 5770 K and the Sun's radius of $6.97x10^8$ meters. Assume that the sun is a black body (therefore, the emissivity will equal 1). Create a variable and list of values of your own and then calculate the Power of the sun using your variable and list. Hint: look to the example if you need help with the code! You can copy, paste, and edit any code chunks from above. Provide your answer with the correct number of significant digits. 
+
+Q2 Solution:
+
+Here is the equation that I'll use to solve for the Power of the sun: 
+$$P = e \sigma T^4*A$$
+I'm following the steps from the example to write code to solve for the Power of the sun:
+```{r Create a variable and list of constants and values, perform a calculation using those values, and solve for the term P in Watts}
+calc_P_list <- list(T=5770, C=5.67E-8, E=1, R1=6.96E8, R2=1.496E11)
+names(calc_P_list)
+
+P <- (calc_P_list$T^4*
+      calc_P_list$E*
+      calc_P_list$C*
+      4*pi*(calc_P_list$R1)^2)
+
+cat (P, "W")
+```
+The **Power of the Sun** is approximately $3.83x10^{26}$ Watts.
+
+______________________________________________________
+
+3) Which of the following would be an appropriate equilibrium equation to represent that the power received from the sun is equal to that emitted by the earth ($P~received = P~emitted$). Hint: this should include a comparison between the two different areas of interest (the circle area that receives energy from the sun, $\pi R^2$, and the earth's surface area that emits energy, $4\pi R^2$) as well as the Solar Constant (So) and the other terms in the Stefan Boltzmann equation? Explain your reasoning behind your choice. 
+
+ a) $So*\pi R^2 = e\sigma T^4*4\pi R^2$
+ b) $So* 4\pi R^2 = e\sigma T^4*4\pi R^2$
+ c) $So*\pi R^2 = e\sigma T^4*\pi R^2$
+ 
+Q3 Solution:
+
+The correct equation to represent that the power received from the sun is equal to that emitted by the earth is **choice a**, $So*\pi R^2 = e\sigma T^4*4\pi R^2$, because on the left side of the equation, the Solar Constant is being multiplied by the area of a circle on the earth that receives energy from the sun and this area equation should be for a circle, hence $\pi R^2$. The right side of the equation represents the power that the earth emits and has all of the terms of the Stefan-Boltzmann law multiplied by the surface area of the earth. Because the earth emits energy from all sides of its surface, the area term on the right side of the equation should be for surface area, hence $4\pi R^2$.
+
+________________________________________________________
+
+4) In the example above we calculated the Solar Constant, So (in $W/m^2$), which is the energy that the earth receives from the sun. Using this, calculate the black body temperature of the earth. Hint: we do this by using the correct equilibrium equation from question 3, rearranging to solve for temperature, and then simplifying any terms that cancel. Show each of these steps and include the code you wrote to calculate your answer. Assume that the earth is a black body. Lastly, please convert for answer from Kelvin to degrees Celsius knowing that $degrees\ Celcius = Kelvin - 273.15$.
+
+Q4 Solution:
+
+First, I'll rearrange the original equation to solve for temperature: 
+$$So*\pi R^2 = e\sigma T^4*4\pi R^2$$
+
+Step 1, move $T^4$ to the left side and all other terms to the right side. I'm also going to remove the term for emissivity (e), since it's just going to be 1:  
+$$T^4 = (So*\pi R^2)/(\sigma T^4*4\pi R^2)$$
+
+Step 2, directly compare the area terms to see what can be canceled and/or simplified (in this case the $\pi R^2$ will cancel): 
+$$T^4 = (So/\sigma)*(\pi R^2/4\pi R^2)$$
+
+Step 3, take the fourth root on both sides so that $T^4$ becomes T on the left side: 
+$$T = [So/4\sigma]^{1/4}$$
+Now I can write code to create a variable and list of values to solve for T. 
+```{r Create a variable and list of constants and values, perform a calculation using those values, and solve for the term T in Kelvin}
+calc_T_list <- list(So = 1360, C=5.67E-8)
+names(calc_T_list)
+
+T1 <- (((calc_T_list$So))/(4*calc_T_list$C))^(1/4)
+
+cat (T1, "K")
+
+T2 <- (T1 - 273.15)
+
+cat (T2, "degrees C")
+```
+The black body temperature of the earth is **5.12 degrees Celsius**. It's cold without an atmosphere!
