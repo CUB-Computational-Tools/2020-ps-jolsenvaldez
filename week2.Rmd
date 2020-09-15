@@ -116,19 +116,17 @@ ________________________________________________________
    c) use the data frame to plot albedo versus temperature for the earth. 
  
 ```{r}
-Mars_albedos <- #this is the name of our data frame
+Earth_albedos <- #this is the name of our data frame
 tibble(
-  text = c("Sandy Mars", "Icy Mars"), # Entering row names
   albedo = c(0.15, 0.70), # We're assigning our to values to the column "albedo"
   So = 591, # Solar constant value for Mars
   SBc = 5.67E-8, # Stefan-Boltzmann constant value
   TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvin using the terms we defined in our data frame
   TempC = (TempK - 273.15) #calculate the Temperature in degrees Celsius
 )
-Mars_albedos$TempC_diff = lead(Mars_albedos$TempC) - Mars_albedos$TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
-Mars_albedos #we call our named data frame and it displays below!
+Earth_albedos$TempC_diff = lead(Mars_albedos$TempC) - Mars_albedos$TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
+Earth_albedos #we call our named data frame and it displays below!
 ```
- 
  
 _________________________________________________________
 
