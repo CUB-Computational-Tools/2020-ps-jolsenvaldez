@@ -75,7 +75,7 @@ First, I'll rearrange the original equation to solve for temperature:
 $$So*\pi R^2 = e\sigma T^4*4\pi R^2$$
 
 Step 1, move $T^4$ to the left side and all other terms to the right side. I'm also going to remove the term for emissivity (e), since it's just going to be 1:  
-$$T^4 = (So*\pi R^2)/(\sigma T^4*4\pi R^2)$$
+$$T^4 = (So*\pi R^2)/(\sigma*4\pi R^2)$$
 
 Step 2, directly compare the area terms to see what can be canceled and/or simplified (in this case the $\pi R^2$ will cancel): 
 $$T^4 = (So/\sigma)*(\pi R^2/4\pi R^2)$$
