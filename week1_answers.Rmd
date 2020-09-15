@@ -78,7 +78,7 @@ Step 1, move $T^4$ to the left side and all other terms to the right side. I'm a
 $$T^4 = (So*\pi R^2)/(\sigma*4\pi R^2)$$
 
 Step 2, directly compare the area terms to see what can be canceled and/or simplified (in this case the $\pi R^2$ will cancel): 
-$$T^4 = (So/\sigma)*(\pi R^2/4\pi R^2)$$
+$$T^4 = (So/4\sigma)*(\pi R^2/4\pi R^2)$$
 
 Step 3, take the fourth root on both sides so that $T^4$ becomes T on the left side: 
 $$T = [So/4\sigma]^{1/4}$$
