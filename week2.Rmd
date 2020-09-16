@@ -39,13 +39,15 @@ By the end of this exercise, you will be able to:
 Let's first re-familiarize ourselves with the Stefan-Boltzmann Law:
 $$ \begin{align} \frac {P}{A} = e \sigma T^4 \end{align}$$
 Terms and Units: 
+Power is in Watts (in SI units, Watts = kg*$m^2$/$s^3$)
 $P = Power\ (Watts)$  
+Area usually refers to surface area, and is calculated using the radius of the planet in question. 
 $ A=Area\ (meters^2)$
 $e=emissivity\ (unitless)$
 $\sigma = Stephan-Boltzmann  \  constant\  (5.67x 10^{-8}\ W/m^2/T^4)$
 $ T= Temperature\ (degrees\  Kelvin^4)$
 
-The Stefan-Boltzmann equation creates a proportional relationship between energy ($\frac{W}{m^2}$) and temperature (kelvins) to the fourth power. compares an energy (power per unit area squared, with units in $\frac{W}{m^2}$) to temperature raised to the fourth (with units in $Kelvin^4$). 
+The Stefan-Boltzmann equation creates a proportional relationship between energy ($\frac{W}{m^2}$) and temperature (kelvins) to the fourth power.
 
 We briefly touched on emissivity in the last problem set, but we'll be delving into that more this week. As a reminder, emissivity refers to the effectiveness of an object to emit an energy. For theoretical black bodies, which absorb all incident heat radiation, emissivity is equal to 1.
 
@@ -62,24 +64,29 @@ $$ \frac {P}{A} = (1-albedo)\ \sigma T^4 $$
 We'll be using albedo to calculate a more accurate temperature for the earth, plot how different albedos affect Earth's temperature, and think about Earth's climate. 
 
 ##Example
-First, we'll start by using albedo to explore the difference in temperature on Mars if it were mostly covered in ice (some scientists think it was once an icy planet!) versus in its current red, sandy state. We'll be using a version of the Stefan-Boltzmann law where we'll solve for Temperature, but this week we'll substitute our $1-albedo$ term in for the emissivity. Here's what the initial equilibrium equation looks like: 
+First, we'll start by using albedo to explore the difference in temperature on Mars if it were mostly covered in ice (some scientists think it was once an icy planet!) versus in its current red, sandy state. We'll be using a version of the Stefan-Boltzmann law that we derived last week when we solved for Temperature, but this week we'll substitute our $1-albedo$ term in for the emissivity. Here's what the initial equilibrium equation looks like (remember, radiation in = radiation out!):
 $$(1-albedo)*So*\pi R^2 = \sigma T^4*4\pi R^2$$
-This equation says that the radiation received by a planet (now affected by the albedo of that planet) is equal to the radiation emitted by that planet. 
+This equation says that the radiation received by a planet (now affected by the albedo of that planet) is equal to the radiation emitted by that planet.
+Note that we are using So, which is the solar constant ($W/m^2$) and describes the amount of energy that the earth receives from the sun. 
 
 Here is the equation above solved for temperature (kelvins):
 $$T = [(1-albedo)*So/4\sigma]^{1/4}$$
-We'll use a solar constant for Mars of 591 $\frac {W}{m^2}$, the Stefan Boltzmann constant of $5.67x 10^{-8}$ and albedos of 0.70 for icy Mars and 0.15 for modern Mars.
+We'll use a solar constant for Mars of 591 $\frac {W}{m^2}$ (this would just describe the energy received by Mars from the sun), the Stefan Boltzmann constant of $5.67x 10^{-8}$ and albedos of 0.70 for icy Mars and 0.15 for modern, sandy Mars.
 
-This week, you'll be introduced to a new coding tool that makes it easy to define and plot data. We'll first use tibbles to create a data frame with columns and rows. 
+This week, you'll be introduced to some new coding terms:
+-tibble is a function that creates data frames which we can populate with values and make calculations from
+-ggplot is a function that creates plots of our data frames and can be individualized with titles, labels, and different aesthetics
+
+Let's jump into using these functions in code; follow along with the green comments "#followed by text" in each row to see what is being done step-by-step:
 ```{r Create a data frame for the different albedos, constants, and values for Mars}
 Mars_albedos <- #this is the name of our data frame
-tibble(
+tibble(        #we call our tibble function to make a data frame
   Description = c("Sandy Mars", "Icy Mars"), # Entering row names
-  albedo = c(0.15, 0.70), # We're assigning our to values to the column "albedo"
-  So = 591, # Solar constant value for Mars
-  SBc = 5.67E-8, # Stefan-Boltzmann constant value
-  Mars_TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvin using the terms we defined in our data frame
-  Mars_TempC = (Mars_TempK - 273.15) #calculate the Temperature in degrees Celsius
+  albedo = c(0.15, 0.70), # We're assigning our two values to the column "albedo"
+  So = 591, # Solar constant value for Mars, this will pop up in both rows since we only gave one value
+  SBc = 5.67E-8, # Stefan-Boltzmann constant value, this will pop up in both rows since we only gave one value
+  Mars_TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in kelvins using the terms we defined in our data frame and then add a column
+  Mars_TempC = (Mars_TempK - 273.15) #calculate the Temperature in degrees Celsius and then add a column
 )
 Mars_albedos$Mars_TempC_diff = lead(Mars_albedos$Mars_TempC) - Mars_albedos$Mars_TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
 Mars_albedos #we call our named data frame and it displays below!
@@ -88,16 +95,17 @@ We found that the temperature of a Sandy, red Mars with albedo of 0.15 has a tem
 
 Let's plot these two data points just to practice using ggplot:
 ```{r Plot Mars temperatures with different albedos}
-plot_Mars_albedo <- (Mars_albedos %>%
-       ggplot() + 
-       aes(x = albedo, y=Mars_TempC) + 
-       scale_x_continuous(limits = c(0.15,0.70), breaks=seq (0.15,0.70,0.05)) +
-       geom_point() +
-       labs (title = "Temperature of Mars for two different albedos", x = "albedo", y= "Temperature (degrees Celsius)") +
-       geom_line()) +
-       theme_bw()
-plot_Mars_albedo
+plot_Mars_albedo <- (Mars_albedos %>% #we name our plot and call our data frame
+       ggplot() + #this is the plot function that will plot our data frame
+       aes(x = albedo, y=Mars_TempC) + #Let's assign x- and y-axis columns
+       scale_x_continuous(limits = c(0.15,0.70), breaks=seq (0.15,0.70,0.05)) + #we can define our x-axis range with limits and then breaks between those limits
+       geom_point() + #we want to see the two data points come up on our plot
+       labs (title = "Temperature of Mars for two different albedos", x = "albedo", y= "Temperature (degrees Celsius)") + #let's add some labels for clarity
+       geom_line()) + #this creates a line between our two data points so we can see the trend between them 
+       theme_bw() #this is an extra addition that helps our plot show up in a black and white color scale
+plot_Mars_albedo #re-enter the plot name and R will generate the plot!
 ```
+Fantastic! We just made a plot to show how different albedos on Mars affect its temperature in degrees Celsius. You'll use this same code when it comes to plotting your answer in question 3.
 
 ##Questions
 1) Explain what albedo and heat energy has to do with the difference in the feeling of wearing a black shirt versus a white shirt on a bright, hot summer day. 
