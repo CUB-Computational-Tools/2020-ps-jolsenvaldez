@@ -74,14 +74,14 @@ This week, you'll be introduced to a new coding tool that makes it easy to defin
 ```{r Create a data frame for the different albedos, constants, and values for Mars}
 Mars_albedos <- #this is the name of our data frame
 tibble(
-  text = c("Sandy Mars", "Icy Mars"), # Entering row names
+  Description = c("Sandy Mars", "Icy Mars"), # Entering row names
   albedo = c(0.15, 0.70), # We're assigning our to values to the column "albedo"
   So = 591, # Solar constant value for Mars
   SBc = 5.67E-8, # Stefan-Boltzmann constant value
-  TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvin using the terms we defined in our data frame
-  TempC = (TempK - 273.15) #calculate the Temperature in degrees Celsius
+  Mars_TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvin using the terms we defined in our data frame
+  Mars_TempC = (Mars_TempK - 273.15) #calculate the Temperature in degrees Celsius
 )
-Mars_albedos$TempC_diff = lead(Mars_albedos$TempC) - Mars_albedos$TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
+Mars_albedos$Mars_TempC_diff = lead(Mars_albedos$Mars_TempC) - Mars_albedos$Mars_TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
 Mars_albedos #we call our named data frame and it displays below!
 ```
 We found that the temperature of a Sandy, red Mars with albedo of 0.15 has a temperature of -56 degrees Celsius and the temperature of an Icy Mars with albedo of 0.70 is -106 degrees Celsius. The temperature difference between these two Mars' is about -50 degrees Celsius. First off, wow that's cold! But also, look at the difference in temperature just because we were comparing an ice-covered Mars versus modern Mars. 
@@ -90,10 +90,10 @@ Let's plot these two data points just to practice using ggplot:
 ```{r Plot Mars temperatures with different albedos}
 plot_Mars_albedo <- (Mars_albedos %>%
        ggplot() + 
-       aes(x = albedo, y=TempC) + 
+       aes(x = albedo, y=Mars_TempC) + 
        scale_x_continuous(limits = c(0.15,0.70), breaks=seq (0.15,0.70,0.05)) +
        geom_point() +
-       labs (title = "Temperature of Mars for two different albedos", x = "Mars albedo", y= "Temperature (degrees Celsius)") +
+       labs (title = "Temperature of Mars for two different albedos", x = "albedo", y= "Temperature (degrees Celsius)") +
        geom_line()) +
        theme_bw()
 plot_Mars_albedo
@@ -102,36 +102,24 @@ plot_Mars_albedo
 ##Questions
 1) Explain what albedo and heat energy has to do with the difference in the feeling of wearing a black shirt versus a white shirt on a bright, hot summer day. 
 
-
-
 _______________________________________________________
 
-2) Solve for the Temperature of the earth using its modern albedo of 0.37. Hint: you can do this with a variable and list like we did last week. 
+2) Solve for the Temperature of the earth using its modern albedo of 0.37. Report your answer in degrees Celsius. Hint: you can do this with a variable and list like we did last week. 
 
 ________________________________________________________
 
 3) Follow the steps below to practice using coding language to investigate the temperature of the earth given varying albedo values: 
-   a) create a data frame which includes the relevant values and constants in the Stefan-Boltzmann law needed to calculate temperature. 
-   b) add an emissivity column (based on albedo) and a calculated temperature column for the data frame. 
-   c) use the data frame to plot albedo versus temperature for the earth. 
- 
-```{r}
-Earth_albedos <- #this is the name of our data frame
-tibble(
-  albedo = c(0.15, 0.70), # We're assigning our to values to the column "albedo"
-  So = 591, # Solar constant value for Mars
-  SBc = 5.67E-8, # Stefan-Boltzmann constant value
-  TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvin using the terms we defined in our data frame
-  TempC = (TempK - 273.15) #calculate the Temperature in degrees Celsius
-)
-Earth_albedos$TempC_diff = lead(Mars_albedos$TempC) - Mars_albedos$TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
-Earth_albedos #we call our named data frame and it displays below!
-```
+   a) create a data frame which includes the relevant values and constants in the Stefan-Boltzmann law needed to calculate temperature.
+   b) add a range of albedos (), Stefan-Boltzmann constant (SBc),  and a calculated temperature column for the data frame. 
+   c) use the data frame to plot albedo versus temperature for the earth.
+   d) comment on the trend of the ggplot you created. Do the different albedos change the Temperature by much? Is the trend linear?
+Hint: look back to the example for all the code you'll need. Simply rename columns and data frames to reflect information for the earth instead of Mars!
  
 _________________________________________________________
 
-4) After completing question 3, what do you think about the temperatures that you calculated? Do they seem too hot or too cold? If they weren't what you were expecting given the temerature of Earth today, what could be missing from the model that we considered in calculating the earth's temperature? 
+4) After completing questions 2 and 3, what do you think about the temperatures that you calculated? Do they seem too hot or too cold? If they weren't what you were expecting given the temerature of Earth today, what could be missing from the model that we considered in calculating the earth's temperature? 
 
+_________________________________________________________
 ##Sources
 -https://scied.ucar.edu/planetary-energy-balance-temperature-calculate#:~:text=Scientists%20use%20the%20term%20albedo,planet%20or%20surface%20reflects%20away.&text=In%20the%201800s%2C%20two%20scientists,called%20the%20Stefan%2DBoltzmann%20law.
 -https://asterism.org/2019/04/12/how-bright-is-the-moon/#:~:text=From%20NASA's%20planetary%20sites%2C%20the,from%20the%20cloud%2Dcovered%20planet.&text=Earth's%20albedo%20is%200.37%3B%20Mars,Uranus%2C%200.51%3B%20Neptune%200.41.
