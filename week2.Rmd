@@ -1,0 +1,138 @@
+---
+title: "Week 2 Problem Set"
+subtitle: "The Stefan-Boltzmann Law and Albedo"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+
+editor_options:
+  chunk_output_type: inline
+---
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+Load the libraries that we'll use in this Problem Set: 
+```{r load libraries}
+library(dplyr)
+library(ggplot2)
+```
+
+##Introduction
+Last week, we introduced the Stefan-Boltzmann Law and applied it to questions regarding astronomical energies and temperatures, specifically with respect to black bodies. This week, we'll build on the Stefan-Boltzmann Law to include terms like albedo and calculations related to climate. 
+
+##Learning Goals
+By the end of this exercise, you will be able to:
+1) Describe what albedo is, how it relates to emissivity, and how it can be substituted into the Stefan-Boltzmann Law equation. 
+2) Calculate the temperature of Earth given different values for albedo. 
+3) Create data frame (using a tibble) and apply a basic plotting function (ggplot) to visualize quantitative values related to albedo. 
+
+##Background and Defining Terms
+Let's first re-familiarize ourselves with the Stefan-Boltzmann Law:
+$$ \begin{align} \frac {P}{A} = e \sigma T^4 \end{align}$$
+Terms and Units: 
+Power is in Watts (in SI units, Watts = kg*$m^2$/$s^3$)
+$P = Power\ (Watts)$  
+Area usually refers to surface area, and is calculated using the radius of the planet in question. 
+$ A=Area\ (meters^2)$
+$e=emissivity\ (unitless)$
+$\sigma = Stephan-Boltzmann  \  constant\  (5.67x 10^{-8}\ W/m^2/T^4)$
+$ T= Temperature\ (degrees\  Kelvin^4)$
+
+The Stefan-Boltzmann equation creates a proportional relationship between energy ($\frac{W}{m^2}$) and temperature (kelvins) to the fourth power.
+
+We briefly touched on emissivity in the last problem set, but we'll be delving into that more this week. As a reminder, emissivity refers to the effectiveness of an object to emit an energy. For theoretical black bodies, which absorb all incident heat radiation, emissivity is equal to 1.
+
+**Albedo** is a term that refers to the amount of light that a planet (or any surface) reflects away. This makes albedo kind of like an "opposite" to emissivity. Therefore, a body that perfectly reflects all light (like one covered in snow or ice) would have an albedo of 100% (usually written in decimal form to be 1.00). In contrast, a planet that has a dark surface (or a black body) would have an albedo of 0. And just like emissivity, albedo is unitless. 
+
+We relate albedo to emissivity through the equation: 
+$$ e = 1 - albedo $$
+Let's stop and think about if this equation makes sense -> 
+-We expect a blackbody to have an albedo of zero and an emissivity of 1 since all light is absorbed and none is reflected. e = 1-0, e = 1. Great! 
+-We expect a perfect reflector to have an albedo of one and an emissivity of zero since no light is absorbed and all is reflected. e = 1-1, e = 0. Awesome! 
+
+Now, let's rewrite the Stefan-Boltzmann Law to include albedo: 
+$$ \frac {P}{A} = (1-albedo)\ \sigma T^4 $$
+We'll be using albedo to calculate a more accurate temperature for the earth, plot how different albedos affect Earth's temperature, and think about Earth's climate. 
+
+##Example
+First, we'll start by using albedo to explore the difference in temperature on Mars if it were mostly covered in ice (some scientists think it was once an icy planet!) versus in its current red, sandy state. We'll be using a version of the Stefan-Boltzmann law that we derived last week when we solved for Temperature, but this week we'll substitute our $1-albedo$ term in for the emissivity. Here's what the initial equilibrium equation looks like (remember, radiation in = radiation out!):
+$$(1-albedo)*So*\pi R^2 = \sigma T^4*4\pi R^2$$
+This equation says that the radiation received by a planet (now affected by the albedo of that planet) is equal to the radiation emitted by that planet.
+Note that we are using So, which is the solar constant ($W/m^2$) and describes the amount of energy that the earth receives from the sun. 
+
+Here is the equation above solved for temperature (kelvins):
+$$T = [(1-albedo)*So/4\sigma]^{1/4}$$
+We'll use a solar constant for Mars of 591 $\frac {W}{m^2}$ (this would just describe the energy received by Mars from the sun), the Stefan Boltzmann constant of $5.67x 10^{-8}$ and albedos of 0.70 for icy Mars and 0.15 for modern, sandy Mars.
+
+This week, you'll be introduced to some new coding terms:
+-tibble is a function that creates data frames which we can populate with values and make calculations from
+-ggplot is a function that creates plots of our data frames and can be individualized with titles, labels, and different aesthetics
+
+Let's jump into using these functions in code; follow along with the green comments "#followed by text" in each row to see what is being done step-by-step:
+```{r Create a data frame for the different albedos, constants, and values for Mars}
+Mars_albedos <- #this is the name of our data frame
+tibble(        #we call our tibble function to make a data frame
+  Description = c("Sandy Mars", "Icy Mars"), # Entering row names
+  albedo = c(0.15, 0.70), # We're assigning our two values to the column "albedo"
+  So = 591, # Solar constant value for Mars, this will pop up in both rows since we only gave one value
+  SBc = 5.67E-8, # Stefan-Boltzmann constant value, this will pop up in both rows since we only gave one value
+  Mars_TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in kelvins using the terms we defined in our data frame and then add a column
+  Mars_TempC = (Mars_TempK - 273.15) #calculate the Temperature in degrees Celsius and then add a column
+)
+Mars_albedos$Mars_TempC_diff = lead(Mars_albedos$Mars_TempC) - Mars_albedos$Mars_TempC #calculate the difference in the TempC between Sandy and Icy Mars and then add a column
+Mars_albedos #we call our named data frame and it displays below!
+```
+We found that the temperature of a Sandy, red Mars with albedo of 0.15 has a temperature of -56 degrees Celsius and the temperature of an Icy Mars with albedo of 0.70 is -106 degrees Celsius. The temperature difference between these two Mars' is about -50 degrees Celsius. First off, wow that's cold! But also, look at the difference in temperature just because we were comparing an ice-covered Mars versus modern Mars. 
+
+Let's plot these two data points just to practice using ggplot:
+```{r Plot Mars temperatures with different albedos}
+plot_Mars_albedo <- (Mars_albedos %>% #we name our plot and call our data frame
+       ggplot() + #this is the plot function that will plot our data frame
+       aes(x = albedo, y=Mars_TempC) + #Let's assign x- and y-axis columns
+       scale_x_continuous(limits = c(0.15,0.70), breaks=seq (0.15,0.70,0.05)) + #we can define our x-axis range with limits and then breaks between those limits
+       geom_point() + #we want to see the two data points come up on our plot
+       labs (title = "Temperature of Mars for two different albedos", x = "albedo", y= "Temperature (degrees Celsius)") + #let's add some labels for clarity
+       geom_line()) + #this creates a line between our two data points so we can see the trend between them 
+       theme_bw() #this is an extra addition that helps our plot show up in a black and white color scale
+plot_Mars_albedo #re-enter the plot name and R will generate the plot!
+```
+Fantastic! We just made a plot to show how different albedos on Mars affect its temperature in degrees Celsius. You'll use this same code when it comes to plotting your answer in question 3.
+
+##Questions
+1) Explain what albedo and heat energy has to do with the difference in the feeling of wearing a black shirt versus a white shirt on a bright, hot summer day. 
+
+_______________________________________________________
+
+2) Solve for the Temperature of the earth using its modern albedo of 0.37. Report your answer in degrees Celsius. Hint: you can do this with a variable and list like we did last week. 
+
+________________________________________________________
+
+3) Follow the steps below to practice using coding language to investigate the temperature of the earth given varying albedo values: 
+   a) create a data frame which includes the relevant values and constants in the Stefan-Boltzmann law needed to calculate temperature.
+   b) add a range of albedos (), Stefan-Boltzmann constant (SBc),  and a calculated temperature column for the data frame. 
+   c) use the data frame to plot albedo versus temperature for the earth.
+   d) comment on the trend of the ggplot you created. Do the different albedos change the Temperature by much? Is the trend linear?
+Hint: look back to the example for all the code you'll need. Simply rename columns and data frames to reflect information for the earth instead of Mars!
+ 
+_________________________________________________________
+
+4) After completing questions 2 and 3, what do you think about the temperatures that you calculated? Do they seem too hot or too cold? If they weren't what you were expecting given the temerature of Earth today, what could be missing from the model that we considered in calculating the earth's temperature? 
+
+_________________________________________________________
+##Sources
+-https://scied.ucar.edu/planetary-energy-balance-temperature-calculate#:~:text=Scientists%20use%20the%20term%20albedo,planet%20or%20surface%20reflects%20away.&text=In%20the%201800s%2C%20two%20scientists,called%20the%20Stefan%2DBoltzmann%20law.
+-https://asterism.org/2019/04/12/how-bright-is-the-moon/#:~:text=From%20NASA's%20planetary%20sites%2C%20the,from%20the%20cloud%2Dcovered%20planet.&text=Earth's%20albedo%20is%200.37%3B%20Mars,Uranus%2C%200.51%3B%20Neptune%200.41.
+-https://www.britannica.com/science/Stefan-Boltzmann-law
+-https://www.deviantart.com/zackdowney/art/Stefan-Boltzmann-Law-407403124
+-http://hyperphysics.phy-astr.gsu.edu/hbase/thermo/stefan.html
+-https://www.youtube.com/watch?v=DQk04xqvVbU
+-https://www.youtube.com/watch?v=JiWnMd9I8GE
