@@ -32,8 +32,8 @@ Last week, we introduced the Stefan-Boltzmann Law and applied it to questions re
 ##Learning Goals
 By the end of this exercise, you will be able to:
 1) Describe what albedo is, how it relates to emissivity, and how it can be substituted into the Stefan-Boltzmann Law equation. 
-2) Calculate the temperature of the earth given different values for albedo. 
-3) Use a basic plotting function and data to visualize quantitative values related to albedo. 
+2) Calculate the temperature of Earth given different values for albedo. 
+3) Create data frame (using a tibble) and apply a basic plotting function (ggplot) to visualize quantitative values related to albedo. 
 
 ##Background and Defining Terms
 Let's first re-familiarize ourselves with the Stefan-Boltzmann Law:
