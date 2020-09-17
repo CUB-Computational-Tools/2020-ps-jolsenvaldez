@@ -1,0 +1,120 @@
+---
+title: "Week 2 Problem Set Answers"
+subtitle: "The Stefan-Boltzmann Law and Albedo"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+
+editor_options:
+  chunk_output_type: inline
+---
+
+Load the libraries that we'll use in this Problem Set Key: 
+```{r load libraries}
+library(dplyr)
+library(ggplot2)
+```
+
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+##Questions
+1) Explain what albedo and heat energy has to do with the difference in the feeling of wearing a black shirt versus a white shirt on a bright, hot summer day. 
+
+**Question 1 Solution:**
+
+A black shirt and a white shirt have different absorptive and reflective properties, which affect how they feel when being worn on a bright, hot summmer day.  A black shirt is much better at absorbing the sun light or heat energy and it will feel a lot hotter; this is because it has an albedo much closer to zero and emissivity much closer to one. A white shirt is much better at reflecting the sun light or heat energy and it will feel a lot cooler compared to the black shirt; this is because it has an albedo that is much closer to one and an emissivity much closer to zero. Don't wear black on a bright, hot summer day! 
+
+_______________________________________________________
+
+2) Solve for the Temperature of the earth using its modern albedo of 0.37. Report your answer in degrees Celsius. Hint: you can do this with a variable and list like we did last week. 
+
+
+**Question 2 Solution:**
+
+To solve for the Temperature of the earth with an albedo of 0.37, we'll start by showing the Stefan-Boltzmann equation solved for temperature (from above):
+$$T = [(1-albedo)*So/4\sigma]^{1/4}$$
+
+We can solve this using the coding method we learned last week. Let's start with creating a variable and list of constants and values:
+```{r Create a variable and a list for constants and values}
+calc_Temp_list <- list(albedo=0.37, So=1360, SBc=5.67E-8)
+names(calc_Temp_list)
+```
+
+Now we'll use those values to solve for Temperature in the equation above:
+```{r Calculate the Temperature of the earth for an albedo of 0.37}
+Earth_Temp_K <- (((1-calc_Temp_list$albedo)*(calc_Temp_list$So))/(4*calc_Temp_list$SBc))^(1/4)
+``` 
+
+We can use code to display our answer with the units Kelvins:
+```{r Display Earth Temperature value in kelvins}
+cat (Earth_Temp_K, "K")
+```
+
+Let's convert the Temperature from kelvins to degrees Celsius:
+```{r Convert the Earth Temperature from kelvins to degrees Celsius}
+Earth_Temp_C <- (Earth_Temp_K -273.15)
+``` 
+
+We can use code to display our answer with the units degrees Celsius:
+```{r Display Earth Temperature value in degrees Celsius}
+cat (Earth_Temp_C, "degrees Celsius")
+```
+
+The temperature of the earth for an albedo of 0.37 is -25 degrees Celsius. That's pretty cold!
+
+________________________________________________________
+
+3) Follow the steps below to practice using coding language to investigate the temperature of the earth given varying albedo values: 
+   a) create a data frame which includes the relevant values and constants in the Stefan-Boltzmann law needed to calculate temperature.
+   b) add a range of albedos (), Stefan-Boltzmann constant (SBc),  and a calculated temperature column for the data frame. 
+   c) use the data frame to plot albedo versus temperature for the earth.
+   d) comment on the trend of the ggplot you created. Do the different albedos change the Temperature by much? Is the trend linear?
+Hint: look back to the example for all the code you'll need. Simply rename columns and data frames to reflect information for the earth instead of Mars!
+ 
+**Question 3 Solution:**
+ 
+First we'll create a data frame for different albedos and the constants and values we'll need when calculating the temperature of the Earth:
+```{r Create a data frame for the different albedos, constants, and values for Earth}
+Earth_albedos <- #this is the name of our data frame
+tibble(
+  albedo = seq(0.10, 0.80, by = 0.10), # We're assigning our to values to the column "albedo"
+  So = 1360, # Solar constant value for Earth
+  SBc = 5.67E-8, # Stefan-Boltzmann constant value
+  Earth_TempK = (((1-albedo)*So)/(4*SBc))^(1/4), #calculate Temperature in Kelvins using the terms we defined in our data frame
+  Earth_TempC = (Earth_TempK - 273.15) #calculate the Temperature in degrees Celsius
+)
+Earth_albedos #we call our named data frame and it displays below!
+```
+ 
+We can plot the Temperature (degrees Celsius) vs albedo to compare how the temperature of the earth changes with different albedos:
+```{r Plot Earth temperatures with different albedos}
+plot_Earth_albedo <- (Earth_albedos %>%
+       ggplot() + 
+       aes(x = albedo, y=Earth_TempC) + 
+       scale_x_continuous(limits = c(0.10,0.80), breaks=seq (0.10,0.80,0.10)) +
+       geom_point() +
+       labs (title = "Temperature(degrees Celsius) of Earth for different albedos", x = "albedo", y= "Temperature (degrees Celsius)") +
+       geom_line()) +
+       theme_bw()
+plot_Earth_albedo
+```
+
+The difference in albedo between 0.10 and 0.8 comes with a range of Temperature (degrees Celsius) values between 0 and -75 degrees Celsius, which seems like a big difference between the two extremes. The trend isn't completely linear; as the albedo gets closer to 0.8, the temperature drops faster for every 0.10 increase in albedo. 
+
+_________________________________________________________
+
+4) After completing questions 2 and 3, what do you think about the temperatures that you calculated? Do they seem too hot or too cold? If they weren't what you were expecting given the temerature of Earth today, what could be missing from the model that we considered in calculating the earth's temperature? 
+
+**Question 4 Solution:**
+
+The temperatures for the Earth that were calculated seem too cold given what we know the temperature of the earth to be. This is because the atmosphere allows for less heat to escape the earth, raising the temperature of the planet so that it's not below 0 degrees Celsius. 
