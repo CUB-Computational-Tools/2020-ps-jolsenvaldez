@@ -22,6 +22,7 @@ editor_options:
 
 Load the libraries that we'll use in this Problem Set: 
 ```{r load libraries}
+library(tidyverse)
 library(dplyr)
 library(ggplot2)
 ```
@@ -38,93 +39,109 @@ By the end of this exercise, you will be able to:
 
 #Prerequisites
 Prior to completing this Problem Set, it is expected that students: 
--Have a basic understanding of general chemistry, specifically with terms like pH, dissolution, and saturation state (omega) 
+-Have a basic understanding of general chemistry, specifically with terms like acid, pH, and dissolution
 -Have a basic familiarity with the structure and syntax of code in R
 -Know how to copy, cut, comment-out, and edit text and code in R
 
 ##Background and Defining Terms
-#! [Alt text] (/Documents/CU Boulder Classes/Computational Tools/2020-ps-jolsenvaldez/Tufte.png)
-! [Alt text] (/Downloads/Ocean-Acidification_image.png)
+! [Alt text] (/Documents/CU Boulder Classes/Computational Tools/2020-ps-jolsenvaldez/Ocean-Acidification_image.png)
+**Ocean acidification** refers to the process by which *increasing levels of carbon dioxide* ($CO_2$) correlate to a *decrease in the pH of the ocean*. The earth has a natural process by which is sequesters carbon dioxide (in rocks, for example) and releases carbon dioxide (by trees, for example). However, anthropogenic ("human-caused") behavior has resulted in an unnatural increase in the amount of carbon dioxide in the atmosphere, which also leads to higher levels of $CO_2$ in the oceans. 
 
-Ocean acidification 
+But, what's "pH" again? Well, acidity is controlled by how many $H^+$ ions are in a solution (acids release $H^+$ ions) and the pH scale is used to describe the *concentration* of $H^+$ ions, which is represented by the term $[H^+]$. A solution is said to be acidic when the pH is below 7, and basic when the pH is above 7. pH and $[H^+]$ have a log relationship, meaning that a small change in pH can cause a big change in the $H^+$ concentration of a solution, like the ocean. 
 
+$$[H^+]=10^{-pH}$$
+Ocean acidification is actually a misleading name for the process by which the oceans become more "acidic." That's because the increase in atmospheric $CO_2$ in the oceans has changed the ocean from alkaline (with a pH above 7) to *less alkaline* where the pH is still above 7 (so not acidic) but lower than it was before.
 
+Now that we've defined some important terms and described **how** ocean acidification works, let's look at some chemical reactions that break down **why** it occurs. When looking at these reactions, remember that all of these are forward and reverse reactions, and the direction in which they occur is governed by which side (the products versus reactants) are 
 
-Let's start with some chemical reactions that break down how 
-
-$$1)\ CO^2 + H_2O \longleftrightarrow\  H_2CO_3^{2-}$$
-
-
+The first chemical reaction describes what happens when carbon dioxide from the atmosphere mixes with seawater to form carbonic acid. Anthropogenic climate change has lead to an increase in the amount of carbon dioxide in the atmosphere, which pushes this equation to the right. 
+$$1)\ CO_2 + H_2O \longleftrightarrow\  H_2CO_3^{2-}$$
+The second chemical reaction describes how carbonic acid breaks down to form hydrogen $(H^+)$ ions and bicarbonate $(HCO_3^{-})$. This increases the concentration of $(H^+)$ ions in the water, which would lower the pH (hence, ocean acidification!).
 $$2)\ H_2CO_3^{2-} \longleftrightarrow\ H^+ + HCO_3^{-}$$
-
-
+The third chemical reaction describes how bicarbonate breaks down to form $H^+$ ions and carbonate $(CO_3^{2-})$. This reaction is important because we'll be thinking about it in **reverse**. When there is a high concentration of $H^+$ ions in the ocean, they bond to carbonate to form more bicarbonate, leaving less carbonate in the water. 
 $$3)\ HCO_3^{-} \longleftrightarrow\  H^+ + CO_3^{2-}$$
-
-
-$$4)\ HCO_3^{-} \longleftrightarrow\  H^+ + CO_3^{2-}$$
-
-
-$$5)\ Ca^{2+} + CO_3^{2-} \longleftrightarrow\  CaCO_3$$
+The fourth chemical reaction describes the process of ***calcification**. Calcifying organisms use calcium $(Ca^{2+})$ and carbonate $(CO_3^{2-})$ suspended in the ocean to form their shells, skeletons, and corals. Carbonate in the ocean comes from the weathering of rocks and the breakdown of old carbonate shells or skeletons, but these processes take time. This forward reaction can only occur if carbonate is saturated in the water and the reverse reaction can occur if there are a lot of $H^+$ ions in the water since hydrogen can better bond to carbonate compared to calcium.
+$$4)\ Ca^{2+} + CO_3^{2-} \longleftrightarrow\  CaCO_3$$
+Now that we've broken down our four reactions let's think about why they explain the process behind ocean acidification, and how its detrimental to the ocean. 
+1) When atmospheric carbon dioxide increases in the atmopshere, it reacts with seawater to form carbonic acid (Reaction 1)
+2) Carbonic acid breaks down to hydrogen ions and bicarbonate, increasing the $[H^+]$ and lowering pH, which can affect plants and animals in the ocean that are sensitive to changes in pH (Reaction 2)
+3) But wait, there's more; with a greater concentration of hydrogen in the water, any suspended carbonate bonds with hydrogen to form more bicarbonate (remember, this is because hydrogen is better at bonding with carbonate than calcium) (reverse Reaction 3)
+4) Uh oh! Calcifying organisms that use carbonate to make their shells (Reaction 4) have a harder time or can't find any carbonate in the water since it's reacted with hydrogen to form bicarbonate!
+5) But it gets worse; when the concentration of hydrogen in the water is so large and much of the carbonate has been reacted to form bicarbonate, the carbonate from organism shells or corals starts to break down and react with the hydrogen, leading to the corrosion of coral skeletons and shells (Reverse Reaction 4). 
 
 ##Example
-We're going to dig deep into the concepts and equations around ocean acidification. 
+We understand terms like pH, dissolution and the chemical reactions that define ocean acidification. Now, let's jump back to the source of this process: the increasing atmospheric carbon dioxide, also known as $pCO_2$ that lowers the pH of seawater and wreaks havoc on calcifying organisms trying to make their calcium carbonate shells and exoskeletons! 
 
+We're going to investigate a data set that compares the mean level of carbon dioxide measured in the atmosphere $(pCO_2)$ in parts per million (ppm) over time (in years) (Source:NOAA Global Monitoring Laboratory, Mauna Loa):
+```{r Import data set and rename columns}
+CO2_annual_mean <- read.table("co2_annmean_mlo.txt", header = FALSE, sep = "", fill = TRUE) #create a data set from a txt file from NOAA (this file should already be in a folder with this Rmd)
 
-Let's plot these two data points just to practice using ggplot:
-```{r Plot Mars temperatures with different albedos}
-plot_Mars_albedo <- (Mars_albedos %>%
-       ggplot() + 
-       aes(x = albedo, y=Mars_TempC) + 
-       scale_x_continuous(limits = c(0.15,0.70), breaks=seq (0.15,0.70,0.05)) +
-       geom_point() +
-       labs (title = "Temperature of Mars for two different albedos", x = "albedo", y= "Temperature (degrees Celsius)") +
-       geom_line()) +
-       theme_bw()
-plot_Mars_albedo
+CO2_annual_mean <- rename(CO2_annual_mean, Year = V1) #rename the 1st column to "Years"
+CO2_annual_mean <- rename(CO2_annual_mean, CO2_ppm = V2) #rename the 2nd column to "CO2_ppm"
+CO2_annual_mean <- rename(CO2_annual_mean, uncertainty_ppm = V3) #rename the 3rd column to "uncertainty_ppm"
+
+CO2_annual_mean #display the data frame we uploaded and edited
 ```
 
+Let's use what's known as an if/else statement and a for loop on our data frame to comment on the magnitude of the atmospheric carbon dioxide (ppm) in different years. 
+You won't be required to do this yourself, but I'll briefly explain what they are used for and what the code is doing (see the commented sections in the code lines). 
 
+First, an **if/else statement** can be assigned to a a vector of values to look for a *condition* within values of the vector (e.g. in a vector of colors, is the value blue?). The *expression* that follows assigns a characteristic to a TRUE condition (e.g. if the value is blue, print "it's blue") so that every value that follows the if conditional statement receives that expression. Further, an else statement can serve as a catch all for anything that doesn't follow that conditional statement (e.g. if the value is NOT blue, print "it's not blue"). 
+
+Lastly, a **for loop** can repeatedly assign the if/else command to a column in a data frame, not just a set of defined values that were written out in vector-form. That way, R will go through and look for the same conditional statement and follow the same expression when that statement is TRUE, but it can do it for HUGE data sets that you don't have to define values for! It's a powerful tool! 
+
+Let's try it with the data frame we have from NOAA. We are going to use a for loop and if/else to make a conditional statement about atmospheric $CO_2$ (ppm). If you remember, it used to be assumed that the amount of atmospheric carbon dioxide would never reach above 400ppm and that if it did, the Earth would be in serious trouble. Well, it did... so we are going to make a for loop that looks through the "CO2_ppm" column in our data frame to assign a comment of "Less than 400ppm" if a value meets the conditional statement of "CO2_ppm < 400ppm". If a value does not meet that requirement (i.e. "CO2_ppm > 400ppm", it will assign a comment of "Yikes, we made it past the 400ppm threshold". There is also code below that creates a new "Comment" column in our data frame to capture the comments for each value. Follow along with the comments on each line of code to understand each step!
+```{r Use a for loop and if/else statement to comment on CO2 ppm values below or above 400ppm}
+CO2_annual_mean$Comment <- NA_character_ #Create a new "Comment" column in our existing data frame and let R know that it will have characters in it, not values (hence NA_character)
+for (i in 1:nrow(CO2_annual_mean)) {    #make a for loop that calls our data frame and specifies the length of the vector; i (a value) from 1 to however many rows our data frame has
+    if (CO2_annual_mean$CO2_ppm[i] < 400) { #apply a conditional if statement calling our CO2_ppm column in our data frame using "< 400", recognizing i so that it knows the vector
+      CO2_annual_mean$Comment [i] <- "Less than 400ppm" #apply an expression if the conditional statement is true, i.e. in the Comment column write "Less than 400ppm"
+    } else {                                #apply a conditional else statement that calls anything that didn't meet the initial if statment (anything > 400)
+      CO2_annual_mean$Comment [i] <- "Yikes, we made it past the 400ppm threshold" #apply an expression to the else statemnt, i.e. "Yikes, we made it past the 400ppm threshold"
+    }
+}
+```
+
+And when we call our data frame, we see the new "Comment" column with the statements we specified! If you look at the $CO_2$ (ppm) value for 2015 (400.83 ppm) the comment has switched from "Less than 400ppm" to "Yikes, we made it past the 400ppm threshold." Great, R did it's job! 
+```{r Display our updated data frame}
+CO2_annual_mean
+```
+
+We can also use a **while loop** to let R make similar computations. A while loop will continuously evaluate an expression in a vector until that statement isn't TRUE. For example, we can apply a while loop to ask R to express whether or not the values in the "Year" column are less than 2000 (i.e., at what point we transition to the 2000s). R will go through for each value (starting at i=1 and continuing down the vector of values until a value is no longer TRUE with the expression) and determine if the value meets the condition (Year < 2000). It will keep going until it hits a value that is no longer TRUE, i.e. Year < 20000. For big data sets, this can be a really useful tool, but take caution, a while loop can end up looping infinitely if it never finds a value that doesn't come back TRUE! 
+
+Let's look at the code that corresponds to this example:
+```{r Use a while loop to note what rows are "Before 2000"}
+CO2_annual_mean$Note <- NA_character_      #We'll make another column called "Notes" just to show what the while loop does
+i <- 1                                     #We'll start by telling R what i will start at
+while  (CO2_annual_mean$Year[i] < 2000) {   #apply a while loop that says for all values of "Year" in our data frame, while "Year < 2000". Note we've tied "i" to our column "Year"
+CO2_annual_mean$Note [i] <- "Before 2000"      #apply an expression that will be included in the "Notes" column if the while statement was TRUE
+      i = i+1                         
+    } 
+```
+
+When we call our data frame, we see that there is a new "Note" column with the expression "Before 2000" up until 1999, and then from 2000 onward there is no comment! Yay, the while loop worked! 
+```{r Display our updated data frame}
+CO2_annual_mean
+```
+
+You won't have to use a for loop, while loop, or if/else statement in the questions, but hopefully you were able to get a sense for their utility in parsing through and completing iterative operations on big data sets. 
 
 ##Questions
-1) Shortly explain (2-3 sentences), in your own words, why ocean acidification occurs, and how it affects ocean ecosystems, particularly calcifying organism. Use the terms included in the Problem Set but keep it concise!
-
-**Question 1 Solution**
-
-Ocean acidification occurs when the atmospheric $CO^2$ increases and leads to a greater amount of carbonic acid $H_2CO_3^{2-}$ in seawater. Carbonic acid dissolves in seawater to create $[H^+]$ ions that bond to suspended carbonate $CO_3^{2-}$ and can dissolve carbonate that is bound in organism shells. Therefore, increased $[H^+]$ leads to lower pH (making seawater more acidic) and limits the $CO_3^{2-}$ available to calcifying organisms. 
+1) Shortly explain (2-3 sentences), in your own words, why ocean acidification occurs, and how it affects ocean ecosystems, particularly calcifying organisms. Use the terms included in the Problem Set but keep it concise!
 
 _______________________________________________________
 
-2) Though the pH of seawater remained mostly constant for millions of years before present, in the last hundred years, the pH of surface sea water has fallen from 8.2 to 8.1. Further, it's been hypothesized that the pH will drop another 0.4 (to a value of 7.7) by the year 2100 (Orr et al., 2005). Calculate the percent rise in acidity for the change in pH for past (8.2) to modern (8.1) and modern to future (7.7), keeping in mind that $[H^{+}] = 10^{pH}$. Make your calculation by creating a small data frame. Hint: if you're having trouble knowing where to start, go back to the code from the example in the Week 2 Problem Set. Once you get your percent changes, comment on the magnitude of the values; were they what you were expecting based on the 0.1 and 0.4 changes in pH? 
-
-**Question 2 Solution:**
-
-```{r pH change}
-pH_change <- #name the data frame
-  tibble (
-    Description = c("past","modern", "future"), #give descriptions to the rows
-    pH = c(8.2, 8.1, 7.7), #include past and modern pH values
-    Hconc = (10^(-pH)), #calculate H+ concentration
-    Hconc_diff = (lead(Hconc) / Hconc), #calculate the fractional difference in H+ concentrations and add a column with that value
-    Hconc_diff_percent = (Hconc_diff-1)*100 #use the difference in H+ concentration to calculate the percent change in acidity
-  )
-
-pH_change #display the data frame
-```
-
-The percent change in acidity given a 0.1 change in pH is around 26%. That's a much greater percent change than it would seem based on the seemingly miniscule change in pH. Further, the 0.4 pH change that's predicted for 2100 has an approximately 150% increase in acidity, which is alarming.
+2) Do your own research! Find a marine organism that has been affected by ocean acidification and write a short (2-3 sentence) description of how they're affected, using at least one term that was outlined in the Problem Set. If you don't know where to start, look at the sources provided at the bottom of the Problem Set. 
 
 ________________________________________________________
 
-3) Follow the steps below to practice using coding language to investigate the temperature of the earth given varying albedo values: 
-   a) create a data frame which includes the relevant values and constants in the Stefan-Boltzmann law needed to calculate temperature.
-   b) add a range of albedos (), Stefan-Boltzmann constant (SBc),  and a calculated temperature column for the data frame. 
-   c) use the data frame to plot albedo versus temperature for the earth.
-   d) comment on the trend of the ggplot you created. Do the different albedos change the Temperature by much? Is the trend linear?
-Hint: look back to the example for all the code you'll need. Simply rename columns and data frames to reflect information for the earth instead of Mars!
- 
+3) Though the pH of seawater remained mostly constant for millions of years before present, in the last hundred years, the pH of surface sea water has fallen from 8.2 to 8.1. Further, it's been hypothesized that the pH will drop another 0.4 (to a value of 7.7) by the year 2100 (Orr et al., 2005). Calculate the percent rise in acidity for the change in pH for past (8.2) to modern (8.1) and modern to future (7.7), keeping in mind that $[H^{+}] = 10^{pH}$. Make your calculation by creating a small data frame. Hint: if you're having trouble knowing where to start, go back to the code from the example in the Week 2 Problem Set. Once you get your percent changes, comment on the magnitude of the values; were they what you were expecting based on the 0.1 and 0.4 changes in pH? 
+
 _________________________________________________________
 
 ##Sources
+-https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html
 -https://ocean.si.edu/ocean-life/invertebrates/ocean-acidification
 -https://theotherco2problem.wordpress.com/what-happens-chemically/
 -https://www.st.nmfs.noaa.gov/Assets/Nemo/documents/lessons/Lesson_3/Lesson_3-Teacher's_Guide.pdf
+-https://www.oceanacidification.de/calcite-aragonite/?lang=en
