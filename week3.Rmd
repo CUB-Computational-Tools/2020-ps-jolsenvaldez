@@ -47,12 +47,12 @@ Prior to completing this Problem Set, it is expected that students:
 ! [Alt text] (/Documents/CU Boulder Classes/Computational Tools/2020-ps-jolsenvaldez/Ocean-Acidification_image.png)
 **Ocean acidification** refers to the process by which *increasing levels of carbon dioxide* ($CO_2$) correlate to a *decrease in the pH of the ocean*. The earth has a natural process by which is sequesters carbon dioxide (in rocks, for example) and releases carbon dioxide (by trees, for example). However, anthropogenic ("human-caused") behavior has resulted in an unnatural increase in the amount of carbon dioxide in the atmosphere, which also leads to higher levels of $CO_2$ in the oceans. 
 
-But, what's "pH" again? Well, acidity is controlled by how many $H^+$ ions are in a solution (acids release $H^+$ ions) and the pH scale is used to describe the *concentration* of $H^+$ ions, which is represented by the term $[H^+]$. A solution is said to be acidic when the pH is below 7, and basic when the pH is above 7. pH and $[H^+]$ have a log relationship, meaning that a small change in pH can cause a big change in the $H^+$ concentration of a solution, like the ocean. 
+But, what's "pH" again? Well, acidity is controlled by how many $H^+$ ions are in a solution (acids release $H^+$ ions) and the pH scale is used to describe the *concentration* of $H^+$ ions, which is represented by the term $[H^+]$. A solution is said to be acidic when the pH is below 7, and basic when the pH is above 7. Even a small change on the pH scale indicates a large change in H+ concentration of a solution (like the ocean); this is due to the log relationship between pH and $H^+$.
 
 $$[H^+]=10^{-pH}$$
 Ocean acidification is actually a misleading name for the process by which the oceans become more "acidic." That's because the increase in atmospheric $CO_2$ in the oceans has changed the ocean from alkaline (with a pH above 7) to *less alkaline* where the pH is still above 7 (so not acidic) but lower than it was before.
 
-Now that we've defined some important terms and described **how** ocean acidification works, let's look at some chemical reactions that break down **why** it occurs. When looking at these reactions, remember that all of these are forward and reverse reactions, and the direction in which they occur is governed by which side (the products versus reactants) are 
+Now that we've defined some important terms and described **how** ocean acidification works, let's look at some chemical reactions that break down **why** it occurs. When looking at these reactions, remember that all of these are forward and reverse reactions.
 
 The first chemical reaction describes what happens when carbon dioxide from the atmosphere mixes with seawater to form carbonic acid. Anthropogenic climate change has lead to an increase in the amount of carbon dioxide in the atmosphere, which pushes this equation to the right. 
 $$1)\ CO_2 + H_2O \longleftrightarrow\  H_2CO_3^{2-}$$
@@ -72,7 +72,7 @@ Now that we've broken down our four reactions let's think about why they explain
 ##Example
 We understand terms like pH, dissolution and the chemical reactions that define ocean acidification. Now, let's jump back to the source of this process: the increasing atmospheric carbon dioxide, also known as $pCO_2$ that lowers the pH of seawater and wreaks havoc on calcifying organisms trying to make their calcium carbonate shells and exoskeletons! 
 
-We're going to investigate a data set that compares the mean level of carbon dioxide measured in the atmosphere $(pCO_2)$ in parts per million (ppm) over time (in years) (Source:NOAA Global Monitoring Laboratory, Mauna Loa):
+We're going to investigate a data set that compares the mean level of gaseous carbon dioxide measured in the atmosphere $(pCO_2)$ (also known as partial pressure) in parts per million (ppm) over time (in years) (Source:NOAA Global Monitoring Laboratory, Mauna Loa):
 ```{r Import data set and rename columns}
 CO2_annual_mean <- read.table("co2_annmean_mlo.txt", header = FALSE, sep = "", fill = TRUE) #create a data set from a txt file from NOAA (this file should already be in a folder with this Rmd)
 
@@ -107,7 +107,7 @@ And when we call our data frame, we see the new "Comment" column with the statem
 CO2_annual_mean
 ```
 
-We can also use a **while loop** to let R make similar computations. A while loop will continuously evaluate an expression in a vector until that statement isn't TRUE. For example, we can apply a while loop to ask R to express whether or not the values in the "Year" column are less than 2000 (i.e., at what point we transition to the 2000s). R will go through for each value (starting at i=1 and continuing down the vector of values until a value is no longer TRUE with the expression) and determine if the value meets the condition (Year < 2000). It will keep going until it hits a value that is no longer TRUE, i.e. Year < 20000. For big data sets, this can be a really useful tool, but take caution, a while loop can end up looping infinitely if it never finds a value that doesn't come back TRUE! 
+We can also use a **while loop** to let R make similar computations. A while loop will continuously evaluate an expression in a vector until that statement isn't TRUE. For example, we can apply a while loop to ask R to express whether or not the values in the "Year" column are less than 2000 (i.e., at what point we transition to the 2000s). R will go through for each value (starting at i=1 and continuing down the vector of values until a value is no longer TRUE with the expression) and determine if the value meets the condition (Year < 2000). It will keep going until it hits a value that is no longer TRUE, i.e. Year < 2000. For big data sets, this can be a really useful tool, but take caution, a while loop can end up looping infinitely if it never finds a value that doesn't come back TRUE! 
 
 Let's look at the code that corresponds to this example:
 ```{r Use a while loop to note what rows are "Before 2000"}
