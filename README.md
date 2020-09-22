@@ -88,7 +88,6 @@ Before you start designing your problem set for any given week, please complete 
 
 <a href='https://mybinder.org/v2/gh/CUB-Computational-Tools/2020-ps-jolsenvaldez/binder-R?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FCUB-Computational-Tools%2F2020-ps-jolsenvaldez%26branch%3Dweek4%26urlpath%3Drstudio'><img src='https://img.shields.io/badge/launch%20draft-R+RStudio-blue.svg'/></a>
 
-
 #### Binder link for final version
 
 > Instructions: Only keep the one link you want your instructor(s) to use. This uses the `master` branch so will only have your newest notebook once you have merged your pull request for the week.
