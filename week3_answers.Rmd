@@ -1,0 +1,61 @@
+---
+title: "Week 3 Problem Set Answers"
+subtitle: "Ocean Acidification"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+
+editor_options:
+  chunk_output_type: inline
+---
+
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+```{r load libraries}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+##Questions and Answers
+1) Shortly explain (2-3 sentences), in your own words, why ocean acidification occurs, and how it affects ocean ecosystems, particularly calcifying organisms. Use the terms included in the Problem Set but keep it concise!
+
+**Question 1 Solution**
+
+Ocean acidification occurs when the atmospheric $CO_2$ increases and leads to a greater amount of carbonic acid $H_2CO_3^{2-}$ in seawater. Carbonic acid dissolves in seawater to create $[H^+]$ ions that bond to suspended carbonate $CO_3^{2-}$ and can dissolve carbonate that is bound in organism shells. Therefore, increased $[H^+]$ leads to lower pH (making seawater more acidic) and limits the $CO_3^{2-}$ available to calcifying organisms. 
+
+_______________________________________________________
+
+2) Do your own research! Find a marine organism that has been affected by ocean acidification and write a short (2-3 sentence) description of how they're affected, using at least one term that was outlined in the Problem Set. If you don't know where to start, look at the sources provided at the bottom of the Problem Set. 
+
+**Question 2 Solution**
+Mussels, clams, urchins, starfish: These organisms are especially affected by ocean acidification because their shells are made from high-magnesium calcium carbonate, not calcium carbonate, which is even more sensitive to dissolution. The weaker shell means they are at a higher risk for being eaten, crushed, or having their shells corrode. The Smithsonian states that, "Mussels and oysters are expected to grow less shell by 25 percent and 10 percent respectively by the end of the century." (Source: https://ocean.si.edu/ocean-life/invertebrates/ocean-acidification)
+
+________________________________________________________
+
+3) Though the pH of seawater remained mostly constant for millions of years before present, in the last hundred years, the pH of surface sea water has fallen from 8.2 to 8.1. Further, it's been hypothesized that the pH will drop another 0.4 (to a value of 7.7) by the year 2100 (Orr et al., 2005). Calculate the percent rise in acidity for the change in pH for past (8.2) to modern (8.1) and modern to future (7.7), keeping in mind that $[H^{+}] = 10^{pH}$. Make your calculation by creating a small data frame. Hint: if you're having trouble knowing where to start, go back to the code from the example in the Week 2 Problem Set. Once you get your percent changes, comment on the magnitude of the values; were they what you were expecting based on the 0.1 and 0.4 changes in pH? 
+
+**Question 2 Solution:**
+
+```{r pH change}
+pH_change <- #name the data frame
+  tibble (
+    Description = c("past","modern", "future"), #give descriptions to the rows
+    pH = c(8.2, 8.1, 7.7), #include past and modern pH values
+    Hconc = (10^(-pH)), #calculate H+ concentration
+    Hconc_diff = (lead(Hconc) / Hconc), #calculate the fractional difference in H+ concentrations and add a column with that value
+    Hconc_diff_percent = (Hconc_diff-1)*100 #use the difference in H+ concentration to calculate the percent change in acidity
+  )
+
+pH_change #display the data frame
+```
