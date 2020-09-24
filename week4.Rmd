@@ -1,0 +1,162 @@
+---
+title: "Week 4 Problem Set"
+subtitle: "Orbital theory and Earth's past climate"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+
+editor_options:
+  chunk_output_type: inline
+---
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+Load the libraries that we'll use in this Problem Set: 
+```{r load libraries}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(rlang)
+```
+
+##Introduction
+In this problem set, we'll be exploring orbital forcings and their effect on climate patterns, specifically with respect to glaciations in the last million years. Since the mid- to late-1800s, scientists have been studying the extent, frequency, and cause of glaciations on Earth. And though ideas and data has greatly expanded over that time, the role of the earth's orbital parameters (eccentricity, obliquity, and precession) has been at the forefront of this conversation since scientists first started questioning the climate and astronomical dynamics that lead to glacial and interglacial periods. 
+
+##Learning Goals
+By the end of this exercise, you will be able to:
+1) Describe the three main types of orbital forcing, how they work, and at what time scale each occurs
+2) Define the term insolation and provide its units
+3) Use the "ggplot" function to create a plot of your own, using aesthetic parameters to add labels and titles
+4) Use the "comment-out" symbol (#) to describe each step of your plotting code
+
+#Prerequisites
+Prior to completing this Problem Set, it is expected that students: 
+-Know terms related to Earth like orbit, tilt, latitude, and glaciation
+-Be familiar with general calculus functions like sine and cosine curves, and understand what period is in this context
+-Have a basic familiarity with the structure and syntax of code in R
+-Know how to copy, cut, comment-out, and edit text and code in R
+
+##Background and Defining Terms
+Three astronomical (orbital) theories relate to the Earth: eccentricity, obliquity, and precession. Let's get right into it!
+
+1) **Eccentricity** defines the *circularity of the earth's orbit* around the sun. When Earth has a more circular orbit, it's distance from the sun at any given time during a full orbit is not much changed. When Earth's orbit is more elliptical, like an oval egg, the Earth spends part of the year at the far ends of the orbit (farthest away from the sun) and part of the year closer to the sun. Eccentricity cycles are on the scale of 100 thousand years (kyr) and 400kyr. 
+
+2) **Obliquity** defines the *tilt of Earth's axis*, which varies between about 22 and 24 degrees. When the obliquity is high (aka the tilt is closer to 25), higher latitudes can get more direct sunlight compared to a lower obliquity (where lower latitudes receive more direct sunlight). Obliquity occurs in 41kyr-cycles. 
+
+3) **Precession** defines the *direction of the tilt axis* of the earth. The tilt direction is described relative to if its pointing towards the north star Vega or the north star Polaris, but the significance of precession is that it can influence which hemispheres receive the most sunlight depending on which hemisphere pole ends up "facing away" from the sun during a given time. Precession occurs in approximately 21kyr-cycles. 
+
+
+These orbital pararmeters are significant when it comes to climate patterns because they govern the distance Earth is from the sun, what time of year that occurs, and how much direct sunlight Earth receives at different latitudes during different times of the year. The way we quantify the amount of sunlight the earth receives at a specific latitude at a specific time is through the term **insolation** $(W/m^2)$ (remember, that's an energy!). Insolation describes the amount of power or heat (in Watts) that the earth receives per square meter. Therefore, when insolation is lower, we assume that the tempearature and climate were cooler, and vice versa. 
+
+
+Now that you're more familiar with the terminology behind these orbital forcings, let's just remind ourselves why all of this is important in understanding climate change patterns and glaciations. When you think about the earth today, we associate the tilt of Earth's axis as being towards the sun, at an angle of around 23.5 degrees, and the earth's orbit as being farthest away during summertime in the northern hemisphere. 
+
+Earth's higher tilt towards the sun all lead to a warmer climate, but what if I told you there have been time's in Earth's past where in addition to that, the summer occurred when the earth was closest to the sun?! That would be a pretty hot summer - one that could begin to melt any snow or ice on the planet. And, what if I told you that there have been times where the earth had a high tilt away from the sun AND was farthest away from the sun in the summer? Those would be some pretty cool summers, right (and pretty chilly winters!)? 
+
+The power of these orbital forcings, specifically in this last example (cool summers that keep ice/snow from melting) were recognized in the early to mid 1900s by a scientist named Milutin Milankovitch. He hypothesized that glaciation and ice ages start when snow and ice don't melt during cooler summers (not necessarily really cold winters). And today, we still use the behavior of orbital forcings at different times in the past to predict what climate looked like during those times! That's a powerful tool!
+
+##Example
+Now, we're going to use some real data that highlights insolation from different latitudes (at either the winter solstice in December or summer solstice in June) over time to get a visual on what these orbital trends look like and how they change with time and season! In the example, I'll also introduce how to create a function that can be used without having to complete numerous lines of command. 
+
+We'll start by loading insolation data from Berger and Loutre from seven different latitudes over the last million years:
+```{r load data}
+insol91.jun <- read.csv("insol91.jun.csv", stringsAsFactors = FALSE) #This is a data file for the June solstice
+insol91.dec <- read.csv("insol91.dec.csv", stringsAsFactors = FALSE) #This is a data file for the December solstice
+
+insol91.jun_dec <- left_join(insol91.jun,insol91.dec, by = "INSOLATION")
+
+insol91.jun_dec <- rename(insol91.jun_dec, Time = INSOLATION) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_90N = X90NJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_60N = X60NJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_30N = X30NJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_0 = X0June) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_30S = X30SJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_60S = X60SJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, June_90S = X90SJune) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_90N = X90NDec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_60N = X60NDec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_30N = X30NDec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_0 = X0.Dec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_30S = X30SDec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_60S = X60SDec) #rename column
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_90S = X90SDec) #rename column
+
+head(insol91.jun_dec) #display data frame
+```
+Oofda! Did you notice how many times we had to rename our columns? Instead of writing code for each individual column, we should have used a function that did that for us! We're going to run into the same problem when plotting, so we'll write a plotting function so that we can plot all of these different latitudes (for June and Dec) just by telling our function which column we'd like to use. 
+
+Here's a single plot for isolation for June at 30 degrees North. 
+```{r plot summmer (June) solstice at 30N}
+plot.jun_30N <- ggplot(insol91.jun_dec, aes(x = Time, y=June_30N)) + #we defined a new plot (plot.jun_30N) and use the ggplot function to plot x and y values from our data frame
+geom_point(size = 0.5, shape = 19, color = "black") + #include data points that will appear as black circles of size 0.5
+geom_line(size = 0.5, color = "black") + #We'll also include a line over our data points to easily see how they connect
+scale_x_reverse() + #let's reverse our x-axis scale since the time values (in kyr) are negative, that way 0 = 1991 and -1000 = 1000 kyr ago
+labs(y = "Insolation (W/m^2) at June_30N", x = "Time (kyr)")+
+theme_bw() #this makes sure that ggplot uses a black and white color scheme for other parts of the plot
+
+plot.jun_30N
+```
+First, let's just look at this plot for a little bit. We see highs and lows back and forth, oscillating in insolation over time. This is the effect of the orbital forcings we've been talking about! Notice that at times the insolation doesn't change much and at other times it makes big jumps from smaller to larger or larger to smaller values. Notice that some of the biggest peaks repeat over a similar amount of time (approximately every 400kyr). Wow, that's the eccentricity cycle that we're seeing expressed in this data! 
+
+Now, we *could* plot all of our columns by copying and pasting the above code and inserting different names for the latitude/solstice that we want. But that's a lot of work (after all, you saw the renaming fiasco!). Let's write a plotting function that does the hard work for us: 
+
+```{r create a plotting function}
+make_plot <- function(insol91.jun_dec, y) { #We defined a new function (make_plot) and defined x, y, and our data frame
+  y_expr <- enexpr(y)  #since our y-axis is user-defined, we need to tell R that y is an expression that it should quote from within the function and pass to the argument once we've defined what y will be
+  ggplot(data = insol91.jun_dec) + #call the ggplot function using the data from our data frame
+    aes(x = Time, y = !!y_expr) + #our x-axis will always be "Time" and our y-axis will be user-defined through enexpr(y) = y_expr
+    geom_point(aes(x = Time, y = !!y_expr), size = 0.5, shape = 19, color = "black") + #include data points (black circles of size 0.5)
+    geom_line() + #We'll also include a line over our data points to easily see how they connect
+    labs(x = "Time (kyr)", y = sprintf("Insolation (W/m^2) at %s", as_label(y_expr))) + #include labels for easy-to-read plots
+    scale_x_reverse() + #let's reverse our x-axis scale since the time values (in kyr) are negative, that way 0 = 1991 and -1000 = 1000 kyr ago
+    theme_bw() #this makes sure that ggplot uses a black and white color scheme for other parts of the plot
+}
+
+make_plot(insol91.jun_dec, y = June_30N) #Make a plot using June_30N as our y input
+```
+We have our plotting function! Woohoo! And we know it works because the ggplot that we made manually for June_30N is identical to this one. Let's plot a few different latitudes and compare them. We'll look at June_60N, Dec_30N, and June_60S.
+```{r use plotting function to plot y = June_60N}
+make_plot(insol91.jun_dec, y = June_60N) #plot for June_60N
+```
+```{r use plotting function to plot y = Dec_30N}
+make_plot(insol91.jun_dec, y = Dec_30N)  #plot for Dec_30N
+```
+```{r use plotting function to plot y = June_60S}
+make_plot(insol91.jun_dec, y = June_60S) #plot for June_90S
+```
+What do you notice? Look at the magnitude of insolation $(W/m^2)$ between all three plots; the December at 30N insolation is much lower than the June at 60N insolation, and the June at 60S insolation is even smaller! This makes sense because the 30 degrees North latitude gets a lot less sun at the winter solstice than the 60 degrees N latitude gets at the summer solstice.
+
+Compare the June_60S and Dec_30N. Think about it; in June, the southern hemisphere experiences winter while the northern hemisphere experiences summer (SH is tilted away from the sun when the NH is titled towards the sun). This means that both of these plots reflect colder climate and therefore lower insolations compared to summer values. However, the magnitude of insolation at 60 degrees South is around 24 $W/m^2$ compared to 200 $W/m^2$ at 30 degrees North in winter. This suggests that even when both hemispheres are experiencing similar seasons, the southern hemisphere still receives even less insolation than the northern hemisphere. Also notice how the peaks of each plot are out of phase with each other; the Dec_30N reaches a peak almost right at 1000 kyr whereas the June_60S goes down and then reaches a peak at the same time. This is called a **lag** in the **period** and it reflects that even for two latitudes experiencing the same season or climate, the record may show that insolation wasn't necessarily received at the same time, which is why the southern hemisphere records a lag in the recorded insolation. 
+
+Now that you have a primer in the terms around orbital forcings and interpreting some of these plots for orbital behaviors, move on to the questions to apply what you've learned.  
+ 
+##Questions
+1) Choose ONE of the orbital parameters we went over in this problem set and summarize: 
+a) what it is 
+b) how it generally influences Earth's climate
+c) the frequency of its cycle
+d) an example of its forcing on climate change 
+
+_______________________________________________________
+
+2) Now that you've gained some familiarity with plotting using the "ggplot" function (the first part of the example), use the Berger and Loutre data set provided above to plot and compare the insolation at two latitudes of your choice. Comment on how they differ in, 1) insolation magnitude $(W/m^2)$, 2) period (aka are the peaks off-set or do they line up?), and note any other similarities or differences you notice between the two. I expect your plot(s) to be well-labeled and your code to have comments for each line to describe what you did. 
+
+________________________________________________________
+
+3) This problem set didn't really get into the scientific methodology behind measuring insolations or temperature-constrained parameters from the past to create an orbitally-influenced climate record. Do some of your own research to highlight one method that scientists use to either age or determine the temperature/climate from sediments and rocks (including ice!) during the last 60 million years. Write at least three sentences and cite any sources you use. 
+
+_________________________________________________________
+
+##Sources
+-https://www.ncdc.noaa.gov/paleo-search/study/5776
+-https://earthobservatory.nasa.gov/features/Paleoclimatology_IceCores
+

@@ -1,0 +1,71 @@
+---
+title: "Week 4 Problem Set Answers"
+subtitle: "Orbital theory and Earth's past climate"
+author: "Juliana Olsen-Valdez"
+date: "Last knitted `r format(Sys.Date(), '%d %b %Y')`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
+
+editor_options:
+  chunk_output_type: inline
+---
+> Click into a code cell (the gray blocks below) to select or edit it. To run a selected code cell, hit `Ctrl`+`Shift`+`Enter` (Windows & Linux) / `Command`+`Shift`+`Enter` (MacOS). Make sure that each code cell runs successfully before you move on to the next one.
+
+Load the libraries that we'll use in this Problem Set: 
+```{r load libraries}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(rlang)
+```
+
+##Questions
+1) Choose ONE of the orbital paramters we went over in this problem set and summarize: 
+a) what it is 
+b) how it generally influences Earth's climate
+c) the frequency of its cycle
+d) an example of its forcing on climate change 
+
+**Question 1 Solution** 
+Eccentricity describes the circularity of Earth's orbit, where the orbit modulates between a circle and an ellipse. Eccentricity influences Earth's climate by changing the distance that the earth is from the sun during different seasons (winter solstice versus summer solstice). Eccentricity has two cycles; every 100kyrs and 400kyrs. Eccentricity can force climate by causing the summer to stay really cool if the earth's orbit is elliptical and experiences the summer solstice when it's farthest from the sun. This causes winter snow and ice to stay frozen and can create a positive feedback that leads to even colder winters and summers to follow, creating a glacial stage!
+
+_______________________________________________________
+
+2) Now that you've gained some familiarity with plotting using the "ggplot" function, use the Berger and Loutre data set provided above to plot and compare the insolation at two latitudes of your choice. Comment on how they differ in, 1) insolation magnitude $(W/m^2)$, 2) period (aka are the peaks off-set or do they line up?), and note any other similarities or differences you notice between the two. I expect your plot(s) to be well-labeled and your code to have comments for each line to describe what you did. 
+
+**Question 2 Solution**
+I'm going to compare the insolation $(W/m^2)$ between 90N in June and 60S in December.  
+
+```{r plot summmer (June) at 90N and 60S}
+plot.jun_90N_dec_60S <- ggplot(insol91.jun_dec, aes(x = Time, y=June_90N)) + #creating a new plot and providing the data frame and x, y values that I'll use
+geom_line(aes(y=June_90N), colour="red") + #label my 90NJune as red
+geom_line(aes(y=Dec_60S), colour="blue") + #label my 60SDec as blue
+scale_x_continuous(limits = c(-1000,0), breaks=seq (-1000,0,100)) + #I add in unique axis tick values for Time (kyr)
+labs(y = "June Insolation at 90N and Dec. Insolation at 60S (W/m^2)", x = "Time (kyr)")+ #I add my x-axis and y-axis labels and a title
+theme_bw() #I want my plot to show up in black and white theme
+
+plot.jun_90N_dec_60S #I call my plot so that it displays - NOTE:these can also be plotted separately
+```
+First off, because these latitudes are in different hemispheres, these should actually record similar insolation values (NH summer solstice happens at the same time as SH winter solstice). We see that! The magnitude of insolation for each latitude line up pretty well! It looks like there is a little offset in that the 90N in June insolation is greater than the 60S in Decmember insolation, which should be expected since even in the same season the southern hemisphere receives less insolation than the northern hemisphere. The insolation for 90N in June appears to slightly lag (less than a half a period because it's not out of phase) compared to the 60S in Decemeber, which is interesting since the example showed a lag in the southern hemisphere. Other differences are that the peaks generally happen at the same time, but the 60S in December peaks appear to have smaller peaks up and down within a single larger peak expressed for 90N in June. 
+________________________________________________________
+
+3) This problem set didn't really get into the scientific methodology behind measuring insolations or temperature-constrained parameters from the past to create an orbitally-influenced climate record. Do some of your own research to highlight one method that scientists use to either age or determine the temperature/climate from sediments and rocks (including ice!) during the last 60 million years. Write at least three sentences and cite any sources you use. 
+
+**Question 3 Solution**
+Climate scientists often use the ratios of elemental isotopes like oxygen $(^{18}O)$ and $(^{16}O)$ to estimate the air temperature recorded in ice cores over the hundreds of thousands of years. The ratio of heavy to light oxygen is thermodynamically influenced and can therefore provide an analog to the air temperature over time. Age can be determined based on layers in the ice that relate to patterns of seasonality. Together, ice cores can provide age and temperature information over time that, when plotted, can be investigated for orbital influences! (Source: https://earthobservatory.nasa.gov/features/Paleoclimatology_IceCores)
+
+_________________________________________________________
+
+##Sources
+-https://www.ncdc.noaa.gov/paleo-search/study/5776
+-https://earthobservatory.nasa.gov/features/Paleoclimatology_IceCores
+
