@@ -69,47 +69,64 @@ Now, we're going to use some real data that highlights insolation from different
 We'll start by loading insolation data from Berger and Loutre from seven different latitudes over the last million years:
 ```{r load data}
 insol91.jun <- read.csv("insol91.jun.csv", stringsAsFactors = FALSE) #This is a data file for the June solstice
-insol91.dec <- read.csv("insol91.dec.csv", stringsAsFactors = FALSE) #This is a data file for the Decemeber solstice
+insol91.dec <- read.csv("insol91.dec.csv", stringsAsFactors = FALSE) #This is a data file for the December solstice
 
 insol91.jun_dec <- left_join(insol91.jun,insol91.dec, by = "INSOLATION")
 
 insol91.jun_dec <- rename(insol91.jun_dec, Time = INSOLATION)
+insol91.jun_dec <- rename(insol91.jun_dec, June_90N = X90NJune)
+insol91.jun_dec <- rename(insol91.jun_dec, June_60N = X60NJune)
+insol91.jun_dec <- rename(insol91.jun_dec, June_30N = X30NJune)
+insol91.jun_dec <- rename(insol91.jun_dec, June_0 = X0June)
+insol91.jun_dec <- rename(insol91.jun_dec, June_30S = X30SJune)
+insol91.jun_dec <- rename(insol91.jun_dec, June_60S = X60SJune)
+insol91.jun_dec <- rename(insol91.jun_dec, June_90S = X90SJune)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_90N = X90NDec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_60N = X60NDec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_30N = X30NDec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_0 = X0.Dec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_30S = X30SDec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_60S = X60SDec)
+insol91.jun_dec <- rename(insol91.jun_dec, Dec_90S = X90SDec)
+
+head(insol91.jun_dec)
 ```
 
 
-
 ```{r plot summmer (June) solstice at 30N}
-plot.jun_30N <- ggplot(insol91.jun_dec, aes(x = Time, y=X30NJune)) +
+plot.jun_30N <- ggplot(insol91.jun_dec, aes(x = Time, y=June_30N)) +
 geom_point(size = 0.5, shape = 19, color = "red") +
 geom_line(size = 0.5, color = "red") + 
 scale_x_reverse() +
-labs(y = "June Insolation at 30N (W/m^2)", x = "Time (kyr)")+
+labs(y = "Insolation (W/m^2) at June_30N", x = "Time (kyr)")+
 theme_bw() 
 
 plot.jun_30N
 ```
 
-
+Fix function, add code line comments
 ```{r}
-make_plot <- function(...) { #Making a plot as a function. Takes x axis as input
-  ggplot2::ggplot(data=insol91.jun_dec) +
-  #plot <- ggplot(insol91.jun_dec) +
-  x.title <- paste("Time before present (kyr) for", toString(Time[i]),) +
-  labs(x = x.title , y="Insolation")
-  geom_point(aes(y = X30NJune, x = Time), size = 0.5, shape = 19, color = "red") +
-  geom_line(size = 0.5, color = "red") + 
+make_plot <- function(x, y, insol91.jun_dec) { #Creating a plotting function; defining x, y, and data frame  
+  ggplot2::ggplot(data = insol91.jun_dec, aes(x={{ x }}, y= {{ y }})) + 
+  labs(x = "Time before present (kyr)", y = paste("Insolation (W/m^2) at", toString(y))) +
+  geom_point(aes(x = Time, y = y), size = 0.5, shape = 19, color = "red") +
   scale_x_reverse() +
-  theme_bw() +
-  
-  return(plot)
+  theme_bw() 
 }
 
-make_plot(y=X30NJune, x=Time)
+make_plot('Time', 'June_90N', insol91.jun_dec)
+
+#make_plot('Time', 'June_60S', insol91.jun_dec)
+
+
+#ggplot(insol91.jun_dec[,y]~insol91.jun_dec[,x]) 
+#ggplot(data=insol91.jun_dec, x = x, y = y[i]) +
+#titley <- expression(paste("Insolation (W/m^2 at", toString(y))) +
+#geom_line(aes(x = Time, y = y), size = 0.5, color = "red") + 
 ```
-
-
+ 
 ##Questions
-1) Choose ONE of the orbital paramters we went over in this problem set and summarize: 
+1) Choose ONE of the orbital parameters we went over in this problem set and summarize: 
 a) what it is 
 b) how it generally influences Earth's climate
 c) the frequency of its cycle
