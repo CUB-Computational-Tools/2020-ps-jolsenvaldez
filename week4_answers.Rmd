@@ -25,6 +25,7 @@ Load the libraries that we'll use in this Problem Set:
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(rlang)
 ```
 
 ##Questions
@@ -42,19 +43,19 @@ _______________________________________________________
 2) Now that you've gained some familiarity with plotting using the "ggplot" function, use the Berger and Loutre data set provided above to plot and compare the insolation at two latitudes of your choice. Comment on how they differ in, 1) insolation magnitude $(W/m^2)$, 2) period (aka are the peaks off-set or do they line up?), and note any other similarities or differences you notice between the two. I expect your plot(s) to be well-labeled and your code to have comments for each line to describe what you did. 
 
 **Question 2 Solution**
-I'm going to compare the insolation $(W/m^2)$ between 90N in June and 90S in December.  
+I'm going to compare the insolation $(W/m^2)$ between 90N in June and 60S in December.  
 
-```{r plot summmer (June) at 90N and winter (Dec) solstice at 90S}
-plot.jun_90N_dec_90S <- ggplot(insol91.jun_dec, aes(x = Time, y=X90NJune)) + #creating a new plot and providing the data frame and x, y values that I'll use
-geom_line(aes(y=X90NJune), colour="red") + #label my 90NJune as red
-geom_line(aes(y=X90SDec), colour="blue") + #label my 90SDec as blue
+```{r plot summmer (June) at 90N and 60S}
+plot.jun_90N_dec_60S <- ggplot(insol91.jun_dec, aes(x = Time, y=June_90N)) + #creating a new plot and providing the data frame and x, y values that I'll use
+geom_line(aes(y=June_90N), colour="red") + #label my 90NJune as red
+geom_line(aes(y=Dec_60S), colour="blue") + #label my 60SDec as blue
 scale_x_continuous(limits = c(-1000,0), breaks=seq (-1000,0,100)) + #I add in unique axis tick values for Time (kyr)
-labs(y = "June Insolation at 90N and Dec. Insolation at 90S (W/m^2)", x = "Time before 1991 (kyr)")+ #I add my x-axis and y-axis labels and a title
+labs(y = "June Insolation at 90N and Dec. Insolation at 60S (W/m^2)", x = "Time (kyr)")+ #I add my x-axis and y-axis labels and a title
 theme_bw() #I want my plot to show up in black and white theme
 
-plot.jun_90N_dec_90S #I call my plot so that it displays
+plot.jun_90N_dec_60S #I call my plot so that it displays - NOTE:these can also be plotted separately
 ```
-First off, because these latitudes are in different hemispheres, these should actually record similar insolation values (NH summer solstice happens at the same time as SH winter solstice). We see that! The magnitude of insolation for each latitude line up pretty well! It looks like there is a little offset in that the 90S December insolation slightly lags (less than a half a period because it's not out of phase) compared to the 90N June. Another note is that both latitudes have times when their insolation peaks are higher than the other. 
+First off, because these latitudes are in different hemispheres, these should actually record similar insolation values (NH summer solstice happens at the same time as SH winter solstice). We see that! The magnitude of insolation for each latitude line up pretty well! It looks like there is a little offset in that the 90N in June insolation is greater than the 60S in Decmember insolation, which should be expected since even in the same season the southern hemisphere receives less insolation than the northern hemisphere. The insolation for 90N in June appears to slightly lag (less than a half a period because it's not out of phase) compared to the 60S in Decemeber, which is interesting since the example showed a lag in the southern hemisphere. Other differences are that the peaks generally happen at the same time, but the 60S in December peaks appear to have smaller peaks up and down within a single larger peak expressed for 90N in June. 
 ________________________________________________________
 
 3) This problem set didn't really get into the scientific methodology behind measuring insolations or temperature-constrained parameters from the past to create an orbitally-influenced climate record. Do some of your own research to highlight one method that scientists use to either age or determine the temperature/climate from sediments and rocks (including ice!) during the last 60 million years. Write at least three sentences and cite any sources you use. 
